@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/f004de53-6931-41a9-8cd1-4ec15f03ac94/resourceGroups/appsvc_linux_uksouth/providers/Microsoft.Web/sites/directus-ve-poc",
+    "appService.deploySubpath": "."
+}

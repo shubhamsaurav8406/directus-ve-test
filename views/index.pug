@@ -1,0 +1,5 @@
+extends layout
+
+block content
+  h1(data-directus="collection:pages;item:1;fields:title;mode:popover")= title
+  p Welcome to #{title}
