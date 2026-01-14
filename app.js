@@ -3,9 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
+var { requireAuth } = require('./lib/auth-middleware');
 
 var app = express();
 
@@ -19,8 +22,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+
+// CSP header to allow iframe embedding
+app.use(function(req, res, next) {
+  res.setHeader('Content-Security-Policy', "frame-ancestors *");
+  next();
+});
+
+// Auth routes (no protection needed)
+app.use('/', authRouter);
+
+// Protected routes - require authentication
+app.use('/', requireAuth, indexRouter);
+app.use('/users', requireAuth, usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

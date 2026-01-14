@@ -5,7 +5,16 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='https://unpkg.com/@directus/visual-editing')
   body
+    nav
+      if user
+        .user-info
+          span Welcome, #{user.first_name || user.email}!
+          a(href='/logout') Logout
+      else
+        a(href='/login') Login
+    
     block content
+    
     script(type="module").
       import { createDirectus, rest, readItem } from 'https://unpkg.com/@directus/sdk';
 
