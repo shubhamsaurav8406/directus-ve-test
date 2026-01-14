@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .page-container
+    h1= page.title
+    
+    if page.content
+      .page-content!= page.content
+    
+    if page.description
+      .page-description
+        p= page.description
+    
+    if page.metadata
+      .page-metadata
+        pre= JSON.stringify(page.metadata, null, 2)
+    
+    a(href='/') Back to home

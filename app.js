@@ -7,6 +7,7 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var pageRouter = require('./routes/page');
 var authRouter = require('./routes/auth');
 var { requireAuth } = require('./lib/auth-middleware');
 
@@ -45,6 +46,7 @@ app.use('/', authRouter);
 
 // Protected routes - require authentication
 app.use('/', requireAuth, indexRouter);
+app.use('/page', requireAuth, pageRouter);
 app.use('/users', requireAuth, usersRouter);
 
 // catch 404 and forward to error handler
