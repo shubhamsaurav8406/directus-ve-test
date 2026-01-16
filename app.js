@@ -29,8 +29,11 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     httpOnly: true,
+    // When running in an iframe with the top-level site different from the iframe site,
+    // this must be 'none' so cookies are sent (count as cross-site in that case)
+    sameSite: 'none',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));

@@ -6,7 +6,9 @@
 
 var app = require('../app');
 var debug = require('debug')('hello-world:server');
-var http = require('http');
+var https = require('https');
+var fs = require('fs');
+var path = require('path');
 
 /**
  * Get port from environment and store in Express.
@@ -16,10 +18,34 @@ var port = normalizePort(process.env.PORT || '4444');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTPS server with mkcert certificates.
  */
 
-var server = http.createServer(app);
+var certPath = path.join(__dirname, '..', 'localhost+2.pem');
+var keyPath = path.join(__dirname, '..', 'localhost+2-key.pem');
+
+var server;
+
+// Check if HTTPS certificates exist
+if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
+  try {
+    var options = {
+      cert: fs.readFileSync(certPath),
+      key: fs.readFileSync(keyPath)
+    };
+    server = https.createServer(options, app);
+    debug('HTTPS server created with mkcert certificates');
+  } catch (error) {
+    debug('Error loading HTTPS certificates, falling back to HTTP:', error.message);
+    var http = require('http');
+    server = http.createServer(app);
+  }
+} else {
+  // Fallback to HTTP if certificates don't exist
+  var http = require('http');
+  server = http.createServer(app);
+  debug('HTTPS certificates not found, using HTTP server. Run "mkcert localhost 127.0.0.1 ::1" in the project directory.');
+}
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -86,5 +112,6 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var protocol = server.key ? 'HTTPS' : 'HTTP';
+  debug(protocol + ' server listening on ' + bind);
 }
