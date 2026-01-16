@@ -7,7 +7,7 @@ const { requireNoAuth, requireAuth } = require('../lib/auth-middleware');
  * GET /login - Show login page
  */
 router.get('/login', requireNoAuth, (req, res) => {
-  res.render('login', { title: 'Login' });
+  res.render('login', { title: 'Login', redirectUrl: req.session.redirectUrl });
 });
 
 /**
@@ -37,7 +37,11 @@ router.post('/login', requireNoAuth, async (req, res) => {
   req.session.refresh_token = result.refresh_token;
   req.session.user = result.user;
   
-  res.redirect('/');
+  // Redirect to original URL or home
+  const redirectUrl = req.session.redirectUrl || '/';
+  delete req.session.redirectUrl;
+  
+  res.redirect(redirectUrl);
 });
 
 /**
