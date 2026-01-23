@@ -5,11 +5,11 @@ const { readPageMetadata } = require('../lib/directus-pages');
 /* GET page by ID */
 router.get('/:id', async function(req, res, next) {
   try {
-    const pageId = req.params.id;
+    const slug = req.params.id;
     const accessToken = req.session.access_token;
     
     // Fetch page metadata from Directus
-    const pageData = await readPageMetadata(pageId, accessToken);
+    const pageData = await readPageMetadata(slug, accessToken);
     
     if (!pageData) {
       return res.status(404).render('error', {

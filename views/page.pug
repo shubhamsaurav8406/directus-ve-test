@@ -2,17 +2,16 @@ extends layout
 
 block content
   .page-container
-    h1= page.title
+    h1(data-directus=`collection:pages;item:${page.id};fields:title;mode:popover`)= page.title
     
-    if page.content
-      .page-content!= page.content
-    
-    if page.description
-      .page-description
-        p= page.description
-    
-    if page.metadata
-      .page-metadata
-        pre= JSON.stringify(page.metadata, null, 2)
+    if page.rows && page.rows.length > 0
+      .page-rows(data-directus=`collection:pages;item:${page.id};fields:rows;mode:drawer`)
+        each row in page.rows
+          .row(data-directus=`collection:rows;item:${row.id};fields:name,sort,stacks;mode:popover`)
+            each stack in row.stacks || []
+              .stack(data-directus=`collection:stacks;item:${stack.id};fields:name,sort,bricks;mode:popover`)
+                h3= stack.name || 'Stack'
+    else
+      p No rows available
     
     a(href='/') Back to home
