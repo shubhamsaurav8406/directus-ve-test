@@ -35,9 +35,6 @@ html
     block content
     
     script(type="module").
-      const DIRECTUS_URL = 'https://dokploy-rob.uksouth.cloudapp.azure.com';
-      
       document.addEventListener('DOMContentLoaded', function () {
-        DirectusVisualEditing.apply({ directusUrl: DIRECTUS_URL });
+        DirectusVisualEditing.apply({ directusUrl: '#{DIRECTUS_URL}' });
       });
-
