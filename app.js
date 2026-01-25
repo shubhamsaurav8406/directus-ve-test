@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -45,7 +47,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-  res.locals.DIRECTUS_URL = process.env.DIRECTUS_URL || 'https://dokploy-rob.uksouth.cloudapp.azure.com';
+  res.locals.DIRECTUS_URL = process.env.DIRECTUS_URL || 'https://localhost:8085';
   next();
 });
 
