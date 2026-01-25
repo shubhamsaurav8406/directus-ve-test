@@ -14,6 +14,22 @@ html
       else
         a(href='/login') Login
     
+    script(type="module").
+      class BrickText extends HTMLElement {
+        connectedCallback() {
+          this.innerHTML = `<div>${this.getAttribute('data-text')}</div>`;
+        }
+      }
+      customElements.define('brick-text', BrickText);
+
+      class BrickImage extends HTMLElement {
+        connectedCallback() {
+          const src = this.getAttribute('data-src');
+          this.innerHTML = `<img src="${src}" alt="Brick Image" />`;
+        }
+      }
+      customElements.define('brick-image', BrickImage);
+    
     block content
     
     script(type="module").

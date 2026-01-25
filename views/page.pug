@@ -10,7 +10,17 @@ block content
           .row(data-directus=`collection:rows;item:${row.id};fields:name,sort,stacks;mode:popover`)
             each stack in row.stacks || []
               .stack(data-directus=`collection:stacks;item:${stack.id};fields:name,sort,bricks;mode:popover`)
-                h3= stack.name || 'Stack'
+                if !stack.bricks || stack.bricks.length === 0
+                  h3= stack.name || 'Stack'
+                else
+                  each brick in stack.bricks
+                    //- pre= JSON.stringify(brick, null, 2)
+                    if brick.collection === 'brick_texts'
+                      brick-text(data-text=brick.item.content, data-directus=`collection:${brick.collection};item:${brick.item.id};fields:content;mode:popover`)
+                    else if brick.collection === 'brick_images'
+                      brick-image(data-src=`${DIRECTUS_URL}/assets/${brick.item.image}?access_token=${access_token}`, data-directus=`collection:${brick.collection};item:${brick.item.id};fields:image;mode:drawer`)
+                    else
+                      p Unknown brick collection: #{brick.collection}
     else
       p No rows available
     

@@ -44,6 +44,11 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use(function(req, res, next) {
+  res.locals.DIRECTUS_URL = process.env.DIRECTUS_URL || 'https://dokploy-rob.uksouth.cloudapp.azure.com';
+  next();
+});
+
 // Auth routes (no protection needed)
 app.use('/', authRouter);
 
