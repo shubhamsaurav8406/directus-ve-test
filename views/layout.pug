@@ -10,6 +10,8 @@ html
         .user-info
           span Welcome, #{user.first_name || user.email}!
           span &nbsp;|&nbsp;
+          a(href='/') Home
+          span &nbsp;|&nbsp;
           a(href='/logout') Logout
       else
         a(href='/login') Login

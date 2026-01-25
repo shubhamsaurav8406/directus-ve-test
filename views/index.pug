@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  h1(data-directus="collection:pages;item:1;fields:title;mode:popover")= title
-  p Welcome to #{title}
+  h1= 'Pages'
+  //- pre= JSON.stringify(pages, null, 2)
+  if pages && pages.length > 0
+    ul
+      each page in pages
+        li
+          a(href=`/page/${page.slug}`)= `${page.title} (${page.status})`
+  else
+    p No pages available.

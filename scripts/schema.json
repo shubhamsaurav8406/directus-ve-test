@@ -42,7 +42,7 @@
           "collapse": "open",
           "collection": "brick_images",
           "color": null,
-          "display_template": "{{image_url}}",
+          "display_template": "{{image}}",
           "group": "stacks",
           "hidden": false,
           "icon": null,

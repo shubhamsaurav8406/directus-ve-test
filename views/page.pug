@@ -2,7 +2,7 @@ extends layout
 
 block content
   .page-container
-    h1(data-directus=`collection:pages;item:${page.id};fields:title;mode:popover`)= page.title
+    h1(data-directus=`collection:pages;item:${page.id};fields:title,rows;mode:popover`)= page.title
     
     if page.rows && page.rows.length > 0
       .page-rows(data-directus=`collection:pages;item:${page.id};fields:rows;mode:drawer`)
