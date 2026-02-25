@@ -40,8 +40,17 @@ router.post('/login', requireNoAuth, async (req, res) => {
   // Redirect to original URL or home
   const redirectUrl = req.session.redirectUrl || '/';
   delete req.session.redirectUrl;
-  
-  res.redirect(redirectUrl);
+
+  req.session.save((err) => {
+    if (err) {
+      return res.render('login', {
+        title: 'Login',
+        error: 'Unable to persist login session. Please try again.'
+      });
+    }
+
+    res.redirect(redirectUrl);
+  });
 });
 
 /**

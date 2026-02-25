@@ -15,6 +15,9 @@ var { requireAuth } = require('./lib/auth-middleware');
 
 var app = express();
 
+// If running behind a reverse proxy (App Service, ingress, etc.), allow secure cookies to work correctly.
+app.set('trust proxy', 1);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -26,16 +29,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
+const sessionCookieSecure = process.env.SESSION_COOKIE_SECURE === 'true';
+const sessionCookieSameSite = (process.env.SESSION_COOKIE_SAMESITE || (sessionCookieSecure ? 'none' : 'lax')).toLowerCase();
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,
+    secure: sessionCookieSecure,
     httpOnly: true,
-    // When running in an iframe with the top-level site different from the iframe site,
-    // this must be 'none' so cookies are sent (count as cross-site in that case)
-    sameSite: 'none',
+    sameSite: sessionCookieSameSite,
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
