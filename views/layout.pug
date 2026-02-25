@@ -3,7 +3,8 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='https://unpkg.com/@directus/visual-editing')
+    script(src='https://unpkg.com/observe-rect@1.0.1/dist/observe-rect.min.js')
+    script(src='https://unpkg.com/@directus/visual-editing@1.2.0/dist/visual-editing.js')
   body
     nav
       if user
@@ -36,5 +37,7 @@ html
     
     script(type="module").
       document.addEventListener('DOMContentLoaded', function () {
-        DirectusVisualEditing.apply({ directusUrl: '#{DIRECTUS_URL}' });
+        if (window.DirectusVisualEditing && typeof window.DirectusVisualEditing.apply === 'function') {
+          window.DirectusVisualEditing.apply({ directusUrl: '#{DIRECTUS_URL}' });
+        }
       });

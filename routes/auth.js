@@ -3,6 +3,22 @@ const router = express.Router();
 const { login, logout } = require('../lib/directus-auth');
 const { requireNoAuth, requireAuth } = require('../lib/auth-middleware');
 
+function getSafeRedirectUrl(redirectUrl) {
+  if (!redirectUrl || typeof redirectUrl !== 'string') {
+    return '/';
+  }
+
+  if (!redirectUrl.startsWith('/') || redirectUrl.startsWith('//')) {
+    return '/';
+  }
+
+  if (redirectUrl === '/favicon.ico' || /\.[a-zA-Z0-9]+$/.test(redirectUrl)) {
+    return '/';
+  }
+
+  return redirectUrl;
+}
+
 /**
  * GET /login - Show login page
  */
@@ -38,7 +54,7 @@ router.post('/login', requireNoAuth, async (req, res) => {
   req.session.user = result.user;
   
   // Redirect to original URL or home
-  const redirectUrl = req.session.redirectUrl || '/';
+  const redirectUrl = getSafeRedirectUrl(req.session.redirectUrl);
   delete req.session.redirectUrl;
 
   req.session.save((err) => {
